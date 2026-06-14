@@ -384,6 +384,21 @@ input[type="text"]:focus { border-color: var(--warm); }
   margin-bottom: 14px;
 }
 
+.btn-random {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px dashed var(--blush);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-random:hover { border-color: var(--warm); color: var(--warm); }
+
 @media (max-width: 400px) {
   .name-row { flex-direction: column; }
   .skip-modes { flex-direction: column; }
@@ -424,6 +439,7 @@ input[type="text"]:focus { border-color: var(--warm); }
     </div>
 
     <button class="btn-main" onclick="startGame()">Los geht's →</button>
+    <button class="btn-random" onclick="startRandom()">🎲 Einfach drauflos — alles zufällig</button>
   </div>
 
   <!-- ── GAME ── -->
@@ -702,6 +718,17 @@ function nextPenalty() {
 }
 
 function restart() { show('start'); }
+function startRandom() {
+  selectedCats = new Set(["easy","deep","funny","intimate","dream","flirt"]);
+  skipMode = "pflicht";
+  n1 = document.getElementById("n1").value.trim() || "Du";
+  n2 = document.getElementById("n2").value.trim() || "Sie";
+  qs = shuffle([...QS]).slice(0, 20);
+  total = qs.length; idx = 0; turn = 0;
+  pPool = shuffle([...PENALTY_QS]);
+  show("game"); render();
+}
+
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 </script>
 </body>
