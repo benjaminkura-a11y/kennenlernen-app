@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Zwischen uns">
+<meta name="theme-color" content="#f7f3ee">
+<title>Zwischen uns</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #f7f3ee;
+  --white: #ffffff;
+  --ink: #1c1410;
+  --deep: #2a1a0e;
+  --warm: #b8935a;
+  --warm-light: #e8d5b7;
+  --blush: #ede5da;
+  --muted: #9a8272;
+  --flirt: #9b3a6a;
+  --flirt-light: #f5e0ec;
+  --red: #b83232;
+  --red-light: #f5e0e0;
+  --shadow: 0 4px 32px rgba(44,26,14,0.10);
+  --shadow-sm: 0 2px 12px rgba(44,26,14,0.07);
+}
+
+html { height: 100%; }
+body {
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ───── LAYOUT ───── */
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.screen { display: none; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 460px; }
+.screen.active { display: flex; }
+
+/* ───── START ───── */
+.eyebrow {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--warm);
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(54px, 14vw, 80px);
+  font-weight: 400;
+  line-height: 0.92;
+  color: var(--deep);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+h1 em { font-style: italic; color: var(--warm); }
+
+.tagline {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--warm), transparent);
+  margin: 0 auto 28px;
+}
+
+/* Name inputs */
+.name-row { display: flex; gap: 10px; width: 100%; margin-bottom: 20px; }
+.ng { flex: 1; text-align: left; }
+.nl {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--blush);
+  border-radius: 8px;
+  background: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+input[type="text"]::placeholder { color: var(--warm-light); }
+input[type="text"]:focus { border-color: var(--warm); }
+
+/* Category pills */
+.section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.cats { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+.cat-btn {
+  padding: 7px 15px;
+  border: 1.5px solid var(--blush);
+  border-radius: 100px;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s;
+  user-select: none;
+}
+.cat-btn.on { background: var(--warm); border-color: var(--warm); color: white; }
+.cat-btn.flirt-cat.on { background: var(--flirt); border-color: var(--flirt); }
+
+/* Skip modes */
+.skip-modes { display: flex; gap: 8px; margin-bottom: 24px; width: 100%; }
+.mode-btn {
+  flex: 1;
+  padding: 10px 8px;
+  border: 1.5px solid var(--blush);
+  border-radius: 8px;
+  background: transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s;
+  line-height: 1.5;
+}
+.mode-btn.on { background: var(--deep); border-color: var(--deep); color: white; }
+
+/* Primary button */
+.btn-main {
+  width: 100%;
+  padding: 15px;
+  background: var(--deep);
+  color: var(--paper);
+  border: none;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-main:hover { background: var(--warm); }
+.btn-main:active { transform: scale(0.98); }
+
+/* ───── GAME ───── */
+#game { width: 100%; max-width: 460px; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.round-lbl {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--warm);
+  white-space: nowrap;
+}
+.prog-wrap { flex: 1; height: 2px; background: var(--blush); border-radius: 2px; overflow: hidden; }
+.prog-bar { height: 100%; background: var(--warm); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.q-count {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Card */
+.card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 36px 28px 28px;
+  width: 100%;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  animation: slideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.card.flirt-card { background: #fdf6fa; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+.card-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--warm);
+  border-radius: 16px 16px 0 0;
+}
+.card.flirt-card .card-accent { background: var(--flirt); }
+
+.q-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 4.8vw, 28px);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--deep);
+  margin-bottom: 24px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+.card.flirt-card .q-text { color: #3a0a22; }
+
+/* Who row */
+.who-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--blush);
+}
+.card.flirt-card .who-row { border-top-color: #e8c0d8; }
+.av {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+.av.p1 { background: var(--deep); color: var(--paper); }
+.av.p2 { background: var(--warm); color: white; }
+.who-txt { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.who-txt strong { color: var(--deep); font-weight: 500; }
+.card.flirt-card .who-txt strong { color: var(--flirt); }
+
+/* Buttons */
+.actions { display: flex; gap: 10px; margin-top: 16px; }
+.btn-skip {
+  padding: 13px 14px;
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--blush);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-skip:hover { border-color: var(--red); color: var(--red); }
+.btn-next {
+  flex: 1;
+  padding: 13px 18px;
+  background: var(--deep);
+  color: var(--paper);
+  border: none;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-next:hover { background: var(--warm); }
+.btn-next:active { transform: scale(0.98); }
+.arrow { transition: transform 0.2s; }
+.btn-next:hover .arrow { transform: translateX(3px); }
+
+/* ───── PENALTY OVERLAY ───── */
+#po {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(247,243,238,0.97);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  text-align: center;
+}
+#po.show { display: flex; }
+
+.p-emoji { font-size: 52px; margin-bottom: 12px; animation: popIn 0.4s cubic-bezier(0.22,1,0.36,1); }
+@keyframes popIn { from{transform:scale(0.4);opacity:0} to{transform:scale(1);opacity:1} }
+
+.p-hl {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--red);
+  margin-bottom: 6px;
+}
+.p-sub { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+
+.p-card {
+  background: white;
+  border-radius: 14px;
+  padding: 24px 22px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 2px 20px rgba(184,50,50,0.10), 0 0 0 1.5px rgba(184,50,50,0.15);
+  margin-bottom: 16px;
+}
+.p-lbl {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.p-q {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--deep);
+  line-height: 1.4;
+}
+.p-hint { font-size: 11px; color: var(--muted); margin-bottom: 18px; }
+.btn-p {
+  padding: 13px 32px;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.btn-p:hover { background: #962626; }
+
+/* ───── END ───── */
+.big-n {
+  font-family: 'Playfair Display', serif;
+  font-size: 100px;
+  font-weight: 400;
+  color: var(--warm);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+#end h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--deep);
+  margin-bottom: 14px;
+}
+
+@media (max-width: 400px) {
+  .name-row { flex-direction: column; }
+  .skip-modes { flex-direction: column; }
+  .card { padding: 28px 20px 22px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── START ── -->
+  <div class="screen active" id="start">
+    <div class="eyebrow">Ein Spiel für zwei</div>
+    <h1>Zwischen<br><em>uns</em></h1>
+    <p class="tagline">Fragen, die näher bringen.<br>Abwechselnd. Ehrlich. Offen.</p>
+    <div class="divider"></div>
+
+    <div class="name-row">
+      <div class="ng"><label class="nl">Du</label><input id="n1" type="text" placeholder="Dein Name" maxlength="20"></div>
+      <div class="ng"><label class="nl">Sie / Er</label><input id="n2" type="text" placeholder="Ihr Name" maxlength="20"></div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:10px">Welche Themen?</div>
+    <div class="cats">
+      <button class="cat-btn on" data-cat="easy">😊 Locker</button>
+      <button class="cat-btn on" data-cat="deep">🌊 Tief</button>
+      <button class="cat-btn on" data-cat="funny">😂 Witzig</button>
+      <button class="cat-btn on" data-cat="intimate">💛 Intim</button>
+      <button class="cat-btn on" data-cat="dream">✨ Träume</button>
+      <button class="cat-btn on flirt-cat" data-cat="flirt">🔥 Frech</button>
+    </div>
+
+    <div class="section-label" style="margin-top:14px; margin-bottom:10px">Beim Überspringen…</div>
+    <div class="skip-modes">
+      <button class="mode-btn on" data-mode="pflicht">😬 Pflicht<br><small>2 Ersatzfragen</small></button>
+      <button class="mode-btn" data-mode="shot">🥃 Shot<br><small>einen Schluck</small></button>
+      <button class="mode-btn" data-mode="free">🕊️ Frei<br><small>einfach weiter</small></button>
+    </div>
+
+    <button class="btn-main" onclick="startGame()">Los geht's →</button>
+  </div>
+
+  <!-- ── GAME ── -->
+  <div class="screen" id="game">
+    <div class="topbar">
+      <div class="round-lbl" id="rl">Runde 1</div>
+      <div class="prog-wrap"><div class="prog-bar" id="pb" style="width:0%"></div></div>
+      <div class="q-count" id="qc">1 / 20</div>
+    </div>
+
+    <div class="card" id="card">
+      <div class="card-accent"></div>
+      <div class="q-text" id="qt"></div>
+      <div class="who-row">
+        <div class="av p1" id="av">?</div>
+        <div class="who-txt"><strong id="wn">Du</strong> antwortest auf diese Frage.</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-skip" id="skipBtn" onclick="handleSkip()">Überspringen</button>
+      <button class="btn-next" onclick="nextQ()">Nächste Frage <span class="arrow">→</span></button>
+    </div>
+  </div>
+
+  <!-- ── PENALTY OVERLAY ── -->
+  <div id="po">
+    <div class="p-emoji" id="pEmoji">😬</div>
+    <div class="p-hl" id="pHl">Übersprungen!</div>
+    <div class="p-sub" id="pSub"></div>
+    <div class="p-card">
+      <div class="p-lbl" id="pLbl">PFLICHTFRAGE 1 VON 2</div>
+      <div class="p-q" id="pQ">…</div>
+    </div>
+    <div class="p-hint" id="pHint"></div>
+    <button class="btn-p" id="pBtn" onclick="nextPenalty()">Beantwortet →</button>
+  </div>
+
+  <!-- ── END ── -->
+  <div class="screen" id="end">
+    <div class="eyebrow">Geschafft</div>
+    <div class="big-n" id="bigN">20</div>
+    <h2>Fragen — <em>geteilt.</em></h2>
+    <p class="tagline">Ihr habt euch heute ein bisschen besser kennengelernt.<br>Das ist nicht nichts.</p>
+    <div class="divider"></div>
+    <button class="btn-main" onclick="restart()">Nochmal spielen</button>
+  </div>
+
+</div>
+<script>
+// ── ALL QUESTIONS ──
+const QS = [
+  // LOCKER
+  { t:"Was war heute das Erste, woran du gedacht hast?", c:"easy" },
+  { t:"Was ist deine absolute Lieblingsfarbe — und warum passt sie zu dir?", c:"easy" },
+  { t:"Kaffee, Tee oder gar nichts — und was sagt das über dich aus?", c:"easy" },
+  { t:"Was schaust du, wenn du einfach nichts denken willst?", c:"easy" },
+  { t:"Berge, Meer oder Stadt — wo bist du am liebsten?", c:"easy" },
+  { t:"Was war dein letzter wirklich spontaner Moment?", c:"easy" },
+  { t:"Was hörst du gerade auf Repeat?", c:"easy" },
+  { t:"Frühaufsteher oder Nachteule — und bist du damit zufrieden?", c:"easy" },
+  { t:"Was ist dein absolutes Lieblingsessen, auf das du niemals verzichten könntest?", c:"easy" },
+  { t:"Welche App öffnest du als erstes morgens?", c:"easy" },
+  { t:"Was ist dein geheimes Talent, das kaum jemand kennt?", c:"easy" },
+  { t:"Welches Tier würde am besten zu dir passen — und warum?", c:"easy" },
+  { t:"Was ist dein Lieblingsgeruch — etwas das dich sofort glücklich macht?", c:"easy" },
+  { t:"Hund oder Katze — und was sagt das über deinen Charakter?", c:"easy" },
+  { t:"Was wäre dein perfektes Frühstück?", c:"easy" },
+  { t:"Welche drei Dinge nimmst du auf eine einsame Insel mit?", c:"easy" },
+  { t:"Was kaufst du dir, wenn du dich selbst verwöhnen willst?", c:"easy" },
+
+  // TIEF
+  { t:"Was war in den letzten Jahren die beste Entscheidung, die du für dich getroffen hast?", c:"deep" },
+  { t:"Worauf bist du richtig stolz — auf etwas, das die meisten gar nicht wissen?", c:"deep" },
+  { t:"Was bereust du, und was hat es dich über dich selbst gelehrt?", c:"deep" },
+  { t:"Welcher Moment in deinem Leben hat dich am stärksten geprägt oder verändert?", c:"deep" },
+  { t:"Wann hast du das letzte Mal wirklich geweint — und warum?", c:"deep" },
+  { t:"Was würdest du an deinem Leben sofort ändern, wenn du es könntest?", c:"deep" },
+  { t:"Gibt es etwas, das du noch niemandem erzählt hast?", c:"deep" },
+  { t:"Was macht einen Menschen für dich wirklich attraktiv — jenseits des Äußerlichen?", c:"deep" },
+  { t:"Wenn Freunde dich mit drei Eigenschaften beschreiben müssten — welche wären das wohl?", c:"deep" },
+  { t:"Was gibt dir Kraft, wenn alles gerade zu viel ist?", c:"deep" },
+  { t:"Was ist deine größte Angst — die, über die du selten sprichst?", c:"deep" },
+  { t:"Was würdest du anders machen, wenn du nochmal 16 wärst?", c:"deep" },
+  { t:"Was bedeutet für dich Zuhause — ein Ort, ein Gefühl oder ein Mensch?", c:"deep" },
+  { t:"Wann hast du das letzte Mal etwas gemacht, das du eigentlich nie machen wolltest — und war es richtig?", c:"deep" },
+  { t:"Womit kämpfst du gerade innerlich am meisten?", c:"deep" },
+  { t:"Was ist das Mutigste, das du je getan hast?", c:"deep" },
+  { t:"Welche Version von dir selbst magst du am meisten?", c:"deep" },
+
+  // WITZIG
+  { t:"Was ist dein peinlichster Moment, über den du heute lachen kannst?", c:"funny" },
+  { t:"Welche vollkommen irrationale Angst hast du?", c:"funny" },
+  { t:"Wenn dein Leben ein Film wäre — welches Genre wäre es?", c:"funny" },
+  { t:"Was ist das Cringe-ste, das du je gemacht hast?", c:"funny" },
+  { t:"Was würde deine beste Freundin oder dein bester Freund über diesen Abend sagen?", c:"funny" },
+  { t:"Hast du ein Talent, das absolut nutzlos ist — aber irgendwie lustig?", c:"funny" },
+  { t:"Was war deine wildeste Ausrede, die du je benutzt hast?", c:"funny" },
+  { t:"Welche seltsame Angewohnheit hast du, die du heimlich magst?", c:"funny" },
+  { t:"Was ist der bescheuertste Grund, weswegen du schon mal gestritten hast?", c:"funny" },
+  { t:"Welche App auf deinem Handy wäre am peinlichsten, wenn jemand draufschaut?", c:"funny" },
+  { t:"Was war das Seltsamste, das du je gegessen hast?", c:"funny" },
+  { t:"Hast du einen Spitznamen — und was steckt dahinter?", c:"funny" },
+  { t:"Was für ein Kind warst du — Engel oder absolute Katastrophe?", c:"funny" },
+
+  // INTIM
+  { t:"Was müsste ein Mensch tun, damit du dich wirklich verstanden und wertgeschätzt fühlst?", c:"intimate" },
+  { t:"Was lässt dich bei jemandem schnell das Interesse verlieren?", c:"intimate" },
+  { t:"Was macht für dich den Unterschied zwischen Liebe und Verliebtheit?", c:"intimate" },
+  { t:"Wie zeigst du, dass du jemanden magst — durch Worte oder durch Taten?", c:"intimate" },
+  { t:"Wann hast du dich zuletzt wirklich tief gesehen und verstanden gefühlt?", c:"intimate" },
+  { t:"Was braucht ein Mensch, damit du ihm wirklich vertraust?", c:"intimate" },
+  { t:"Gibt es etwas, das du dir selbst nur schwer vergibst?", c:"intimate" },
+  { t:"Was vermisst du am Singlesein am meisten?", c:"intimate" },
+  { t:"Was genießt du am Singlesein heimlich am meisten?", c:"intimate" },
+  { t:"Ich könnte nicht leben ohne… — was ist deine ehrliche Antwort?", c:"intimate" },
+  { t:"Was war bisher dein schönstes Date — was hat es besonders gemacht?", c:"intimate" },
+  { t:"Welche Eigenschaft sollte dein zukünftiger Partner unbedingt haben?", c:"intimate" },
+  { t:"Was musste passieren, damit du jemanden nach kurzer Zeit richtig interessant findest?", c:"intimate" },
+  { t:"Welche Beziehung hat dich am stärksten geprägt — und warum?", c:"intimate" },
+  { t:"Was ist für dich körperliche Bestätigung — was brauchst du davon?", c:"intimate" },
+
+  // TRÄUME
+  { t:"Wenn du morgen für einen Monat irgendwo auf der Welt leben könntest — ohne Verpflichtungen — wohin?", c:"dream" },
+  { t:"Worüber könntest du stundenlang reden, ohne dass es dir langweilig wird?", c:"dream" },
+  { t:"Gibt es einen Traum oder Wunsch, den du dir unbedingt noch erfüllen willst?", c:"dream" },
+  { t:"Wo stehst du mit deinem Leben in 5 Jahren — wenn alles gut geht?", c:"dream" },
+  { t:"Was willst du erleben, bevor du stirbst — wirklich?", c:"dream" },
+  { t:"Welche Sprache oder Fähigkeit wünschst du dir manchmal einfach?", c:"dream" },
+  { t:"Gibt es etwas, das du immer wolltest — aber dir nie getraut hast?", c:"dream" },
+  { t:"Was willst du, dass man sich an dich erinnert?", c:"dream" },
+  { t:"Wenn Geld keine Rolle spielen würde — was würdest du morgen anders machen?", c:"dream" },
+  { t:"Was ist dein größter Wunsch für die nächsten zwölf Monate?", c:"dream" },
+  { t:"Welches Buch, welcher Film oder welcher Mensch hat deine Sicht auf die Welt verändert?", c:"dream" },
+  { t:"Wenn du eine Sache auf der Welt verändern könntest — was wäre das?", c:"dream" },
+
+  // FRECH 🔥
+  { t:"Was an jemandem zieht dich sofort an — noch bevor er ein Wort gesagt hat?", c:"flirt" },
+  { t:"Was ist deine größte Schwäche, wenn dir jemand wirklich gefällt?", c:"flirt" },
+  { t:"Küssen oder umarmt werden — was berührt dich tiefer?", c:"flirt" },
+  { t:"Was müsste jemand tun, damit du heute Nacht nicht nach Hause gehst?", c:"flirt" },
+  { t:"Wo an dir darf jemand auf keinen Fall anfassen — und wo am liebsten?", c:"flirt" },
+  { t:"Was findest du an mir bisher am anziehendsten — ehrlich?", c:"flirt" },
+  { t:"Was würdest du mir jetzt gerne sagen — aber traust dich noch nicht?", c:"flirt" },
+  { t:"Wenn wir uns heute Nacht das letzte Mal sehen würden — was würdest du noch tun wollen?", c:"flirt" },
+  { t:"Zeigst du lieber dass du jemanden magst — oder magst du es, wenn er es zuerst zeigt?", c:"flirt" },
+  { t:"Hand halten oder eng nebeneinander sitzen — was macht dir mehr?", c:"flirt" },
+  { t:"Wie lange dauert es bei dir, bis du jemandem wirklich körperlich nah sein willst?", c:"flirt" },
+  { t:"Was bringt dich beim Flirten garantiert zum Lächeln?", c:"flirt" },
+  { t:"Was war bisher dein eindeutigster, mutigster Flirt-Moment?", c:"flirt" },
+  { t:"Was ist deine wildeste noch nicht ausgelebte Fantasie?", c:"flirt" },
+  { t:"Was ist dein absolutes No-Go im Bett — ohne Kompromiss?", c:"flirt" },
+  { t:"Was ist für dich erotischer — was jemand sagt oder wie er dich ansieht?", c:"flirt" },
+  { t:"Hast du eine verrückte Geschichte, die du mir erzählen würdest — wenn du dich traust?", c:"flirt" },
+  { t:"Was ist deine erogene Zone, die die wenigsten Menschen kennen?", c:"flirt" },
+  { t:"Was denkst du gerade — wirklich?", c:"flirt" },
+  { t:"Was wäre dein Einstieg, wenn du mich ansprechen müsstest — heute, hier?", c:"flirt" },
+];
+
+const PENALTY_QS = [
+  "Beschreibe deinen perfekten ersten Kuss — Ort, Wetter, Gefühl.",
+  "Was war dein bisher peinlichster Flirt-Moment?",
+  "Welchen Satz hättest du jemandem früher gerne gesagt — aber nie konntest?",
+  "Was ist für dich intimer — jemanden anzusehen oder anzufassen?",
+  "Wann warst du zuletzt wirklich aufgeregt wegen jemandem?",
+  "Was wäre für dich ein perfektes erstes Date — in drei Sätzen?",
+  "Welche drei Worte würden dich von jemandem sofort einnehmen?",
+  "Was ist das Erste, das du denkst, wenn du abends alleine nach Hause gehst?",
+  "Was magst du an dir selbst am meisten, wenn du verliebt bist?",
+  "Was ist das Mutigste, das du jemandem je gesagt hast, dem du gefällst?",
+];
+
+// ── STATE ──
+let selectedCats = new Set(["easy","deep","funny","intimate","dream","flirt"]);
+let skipMode = "pflicht";
+let qs = [], idx = 0, total = 0, turn = 0;
+let n1 = "Du", n2 = "Sie";
+let pPool = [], pQueue = [], pStep = 0;
+
+// ── SETUP ──
+document.querySelectorAll('.cat-btn').forEach(b => b.addEventListener('click', () => {
+  const c = b.dataset.cat;
+  if (selectedCats.has(c)) { if (selectedCats.size > 1) { selectedCats.delete(c); b.classList.remove('on'); } }
+  else { selectedCats.add(c); b.classList.add('on'); }
+}));
+
+document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); skipMode = b.dataset.mode;
+}));
+
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; }
+  return b;
+}
+
+// ── GAME ──
+function startGame() {
+  n1 = document.getElementById('n1').value.trim() || "Du";
+  n2 = document.getElementById('n2').value.trim() || "Sie";
+  const pool = QS.filter(q => selectedCats.has(q.c));
+  qs = shuffle(pool).slice(0, Math.min(20, pool.length));
+  total = qs.length; idx = 0; turn = 0;
+  pPool = shuffle(PENALTY_QS);
+  show('game'); render();
+}
+
+function render() {
+  if (idx >= qs.length) { show('end'); document.getElementById('bigN').textContent = total; return; }
+  const q = qs[idx];
+  const card = document.getElementById('card');
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = '';
+  card.className = 'card' + (q.c === 'flirt' ? ' flirt-card' : '');
+
+  document.getElementById('qt').textContent = q.t;
+
+  const p1 = turn === 0;
+  const av = document.getElementById('av');
+  av.textContent = (p1 ? n1 : n2)[0].toUpperCase();
+  av.className = 'av ' + (p1 ? 'p1' : 'p2');
+  document.getElementById('wn').textContent = p1 ? n1 : n2;
+
+  document.getElementById('pb').style.width = (idx / total * 100) + '%';
+  document.getElementById('qc').textContent = `${idx+1} / ${total}`;
+  document.getElementById('rl').textContent = `Runde ${idx+1}`;
+
+  const sb = document.getElementById('skipBtn');
+  if (skipMode === 'shot') sb.textContent = '🥃 Überspringen';
+  else if (skipMode === 'pflicht') sb.textContent = 'Skip → 2 Pflichten';
+  else sb.textContent = 'Überspringen';
+}
+
+function nextQ() { idx++; turn = turn === 0 ? 1 : 0; render(); }
+
+function handleSkip() {
+  const who = turn === 0 ? n1 : n2;
+  if (skipMode === 'free') { nextQ(); return; }
+  if (skipMode === 'shot') { showShot(who); return; }
+  showPenalty(who);
+}
+
+function showShot(who) {
+  document.getElementById('pEmoji').textContent = '🥃';
+  document.getElementById('pHl').textContent = 'Shot-Pflicht!';
+  document.getElementById('pSub').textContent = `${who} — einen Schluck bitte!`;
+  document.getElementById('pLbl').textContent = '';
+  document.getElementById('pQ').textContent = 'Erst wenn das Glas unten ist, geht es weiter.';
+  document.getElementById('pHint').textContent = '';
+  document.getElementById('pBtn').textContent = 'Getrunken — weiter →';
+  document.getElementById('pBtn').onclick = () => { document.getElementById('po').classList.remove('show'); nextQ(); };
+  document.getElementById('po').classList.add('show');
+}
+
+function showPenalty(who) {
+  if (pPool.length < 2) pPool = shuffle(PENALTY_QS);
+  pQueue = pPool.splice(0, 2); pStep = 0;
+  document.getElementById('pEmoji').textContent = '😬';
+  document.getElementById('pHl').textContent = 'Übersprungen!';
+  document.getElementById('pSub').textContent = `${who} muss 2 Pflichtfragen beantworten`;
+  document.getElementById('pBtn').onclick = nextPenalty;
+  renderPStep();
+  document.getElementById('po').classList.add('show');
+}
+
+function renderPStep() {
+  document.getElementById('pLbl').textContent = `PFLICHTFRAGE ${pStep+1} VON 2`;
+  document.getElementById('pQ').textContent = pQueue[pStep];
+  document.getElementById('pHint').textContent = pStep === 0 ? 'Danach kommt noch eine.' : 'Letzte — dann geht\'s weiter.';
+  document.getElementById('pBtn').textContent = pStep === 0 ? 'Beantwortet → weiter' : 'Fertig — Spiel weiter →';
+}
+
+function nextPenalty() {
+  if (pStep === 0) { pStep = 1; renderPStep(); }
+  else { document.getElementById('po').classList.remove('show'); nextQ(); }
+}
+
+function restart() { show('start'); }
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+</script>
+</body>
+</html>
